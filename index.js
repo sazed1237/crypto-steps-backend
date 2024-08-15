@@ -11,7 +11,7 @@ const port = process.env.PORT || 5000
 
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL_PRODUCTION ,
+    origin: process.env.FRONTEND_URL_PRODUCTION || process.env.FRONTEND_URL,
     credentials: true
 }))
 app.use(express.json())
