@@ -10,13 +10,27 @@ const jwt = require('jsonwebtoken');
 const app = express()
 const port = process.env.PORT || 5000
 
+const allowedOrigins = [process.env.FRONTEND_URL, process.env.FRONTEND_URL_PRODUCTION];
+
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
-}))
+}));
+
 app.use(express.json())
 
+
+app.options('*', cors({
+    origin: allowedOrigins,
+    credentials: true
+}));
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.yr1gg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
