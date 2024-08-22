@@ -10,9 +10,8 @@ const jwt = require('jsonwebtoken');
 const app = express()
 const port = process.env.PORT || 5000
 
+
 const allowedOrigins = [process.env.FRONTEND_URL, process.env.FRONTEND_URL_PRODUCTION];
-
-
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
@@ -25,6 +24,7 @@ app.use(cors({
 }));
 
 app.use(express.json())
+
 
 
 app.options('*', cors({
@@ -49,8 +49,8 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         // await client.connect();
 
-        const tradeCollection = client.db("novaMarket").collection("trades");
-        const usersCollection = client.db("novaMarket").collection("users");
+        const tradeCollection = client.db("cryptoSteps").collection("trades");
+        const usersCollection = client.db("cryptoSteps").collection("users");
 
 
         const verifyToken = (req, res, next) => {
@@ -81,6 +81,7 @@ async function run() {
         app.post("/signin", async (req, res) => {
             try {
                 const { email, password } = req.body;
+                console.log(password)
                 const query = { email: email };
                 const existUser = await usersCollection.findOne(query);
 
@@ -333,8 +334,8 @@ async function run() {
 
 
         // // Send a ping to confirm a successful connection
-        // await client.db("admin").command({ ping: 1 });
-        // console.log("Pinged your deployment. You successfully connected to MongoDB!");
+        await client.db("admin").command({ ping: 1 });
+        console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // Ensures that the client will close when you finish/error
         // await client.close();
