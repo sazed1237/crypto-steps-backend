@@ -55,7 +55,7 @@ async function run() {
         // jwt API for auth Providers 
         app.post('/jwt', async (req, res) => {
             const user = req.body;
-            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+            const token = jwt.sign(user, process.env.SECRET_TOKEN_KEY, {
                 expiresIn: '1h'
             })
             res.send({ token })
@@ -210,7 +210,7 @@ async function run() {
         })
 
 
-        
+
 
 
         app.get('/user', verifyToken, async (req, res) => {
