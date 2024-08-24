@@ -184,8 +184,9 @@ async function run() {
 
 
         app.post('/user', async (req, res) => {
-            const user = req.body;
-            const query = { email: user.email }
+            const user = req?.body;
+            // console.log(user)
+            const query = { email: user?.email }
             const existUser = await usersCollection.findOne(query)
 
             if (existUser) {
