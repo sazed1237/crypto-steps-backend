@@ -47,7 +47,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        // await client.connect();
+        await client.connect();
 
         const tradeCollection = client.db("cryptoSteps").collection("trades");
         const usersCollection = client.db("cryptoSteps").collection("users");
@@ -185,29 +185,29 @@ async function run() {
 
         app.post('/user', async (req, res) => {
             const user = req?.body;
-            // console.log(user)
+            console.log(user)
             const query = { email: user?.email }
             const existUser = await usersCollection.findOne(query)
 
             if (existUser) {
                 // If the user already exists, return an error response
-                res.status(400).json({
+                return res.json({
                     message: "User with this email already exists",
-                    success: false,
-                    error: true,
-                });
-            } else {
-                // Create a new user and insert it into the database
-                const result = await usersCollection.insertOne(user);
-
-                // Send a success response with the inserted user data
-                res.status(200).json({
-                    message: "User created successfully",
-                    success: true,
-                    error: false,
-                    data: result,
+                    insertedId: null
                 });
             }
+
+            // Create a new user and insert it into the database
+            const result = await usersCollection.insertOne(user);
+
+            // Send a success response with the inserted user data
+            res.status(200).json({
+                message: "User created successfully",
+                success: true,
+                error: false,
+                data: result,
+            });
+
         })
 
 
