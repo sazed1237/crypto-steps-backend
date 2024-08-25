@@ -47,7 +47,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        // await client.connect();
 
         const tradeCollection = client.db("cryptoSteps").collection("trades");
         const usersCollection = client.db("cryptoSteps").collection("users");
@@ -64,7 +64,7 @@ async function run() {
 
         const verifyToken = (req, res, next) => {
             const token = req.headers.authorization.split(' ')[1];
-            console.log('token', token)
+            // console.log('token', token)
 
             if (!token) {
                 return res.status(403).json({
@@ -185,7 +185,7 @@ async function run() {
 
         app.post('/user', async (req, res) => {
             const user = req?.body;
-            console.log(user)
+            // console.log(user)
             const query = { email: user?.email }
             const existUser = await usersCollection.findOne(query)
 
@@ -216,8 +216,8 @@ async function run() {
 
         app.get('/user', verifyToken, async (req, res) => {
             // console.log(req.decoded)
-            const userId = req?.decoded?._id
-            const query = { _id: new ObjectId(userId) }
+            const userEmail = req?.decoded?.email
+            const query = { email: userEmail }
             const result = await usersCollection.findOne(query)
             // console.log(result)
 
@@ -356,7 +356,7 @@ async function run() {
 
 
 
-        app.delete("/trade/:id", verifyToken, async (req, res) => {
+        app.delete("/trades/:id", verifyToken, async (req, res) => {
             const tradeId = req.params.id;
             console.log(tradeId)
             const query = { _id: new ObjectId(tradeId) }
