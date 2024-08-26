@@ -52,6 +52,10 @@ async function run() {
         const tradeCollection = client.db("cryptoSteps").collection("trades");
         const usersCollection = client.db("cryptoSteps").collection("users");
 
+        app.options('*', (req, res) => {
+            res.sendStatus(200);
+        });
+
         // jwt API for auth Providers 
         app.post('/jwt', async (req, res) => {
             const user = req.body;
@@ -235,7 +239,7 @@ async function run() {
             const userEmail = req?.query?.email;  // Get the email from the query parameters
             const query = { email: userEmail };  // Filter trades by user email
 
-            console.log(userEmail)
+            // console.log(userEmail)
             try {
                 const trades = await tradeCollection.find(query).toArray();
                 res.json({
