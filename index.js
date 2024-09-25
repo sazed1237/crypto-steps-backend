@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const axios = require('axios');
 require('dotenv').config()
 const path = require('path');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
@@ -75,6 +76,8 @@ async function run() {
 
         const tradeCollection = client.db("cryptoSteps").collection("trades");
         const usersCollection = client.db("cryptoSteps").collection("users");
+        const testimonialCollection = client.db("cryptoSteps").collection("testimonials");
+
 
         app.options('*', (req, res) => {
             res.sendStatus(200);
@@ -261,8 +264,6 @@ async function run() {
         });
 
 
-
-
         app.delete("/trades/:id", verifyToken, async (req, res) => {
             const tradeId = req.params.id;
             console.log(tradeId)
@@ -276,6 +277,32 @@ async function run() {
                 data: result
             })
 
+        })
+
+
+
+        // coins geko api 
+
+        app.get('/api/crypto', async (req, res) => {
+            try {
+                const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets', {
+                    params: {
+                        vs_currency: 'usd',
+                        ids: 'bitcoin,ethereum'
+                    }
+                });
+                // console.log(response.data)
+                res.json(response.data);
+            } catch (error) {
+                res.status(500).send('Error fetching data');
+            }
+        });
+
+
+        app.get('/api/testimonial', async (req, res) => {
+            const testimonials = await testimonialCollection.find().toArray()
+
+            res.send(testimonials)
         })
 
 
